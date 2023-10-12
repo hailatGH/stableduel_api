@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="{% static 'deposit/style.css' %}">
+  <script async src="https://ga.jspm.io/npm:es-module-shims@1.8.0/dist/es-module-shims.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        {% if isDev %}
+        "vue": "https://cdn.jsdelivr.net/npm/vue@3/dist/vue.esm-browser.js",
+        {% else %}
+        "vue": "https://cdn.jsdelivr.net/npm/vue@3/dist/vue.esm-browser.prod.js",
+        {% endif %}
+        "vue3-sfc-loader": "https://cdn.jsdelivr.net/npm/vue3-sfc-loader/dist/vue3-sfc-loader.esm.js"
+      }
+    }
+  </script>
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+  <script type="application/json" id="amount">{{ amount|safe }}</script>
+  <script type="application/json" id="nuvei_data">{{ nuvei_data|safe }}</script>
+  <script type="application/json" id="user_data">{{ user_data|safe }}</script>
+
+  <!-- Nuvei -->
+  <script defer src="https://cdn.safecharge.com/safecharge_resources/v1/websdk/safecharge.js"></script>
+
+  <!-- Load Vue -->
+  <script defer type="module">
+    import * as Vue from "vue";
+    import {loadModule} from "vue3-sfc-loader";
+    const options = {
+      moduleCache: {
+        vue: Vue,
+      },
+      async getFile(url) {
+        const resp = await fetch(url);
+        if (!resp.ok)
+          throw Object.assign(new Error(url + " " + resp.statusText), {resp});
+        return resp.text();
+      },
+      addStyle(styleStr) {
+        const style = document.createElement("style");
+        style.textContent = styleStr;
+        const ref = document.head.getElementsByTagName("style")[0] || null;
+        document.head.insertBefore(style, ref);
+      },
+    };
+    const app = Vue.createApp(
+      Vue.defineAsyncComponent(() => loadModule("{% static 'deposit/App.vue' %}", options))
+    );
+    app.mount("#app");
+
+    export {loadModule};
+
+  </script>
+</head>
+
+<body>
+  <div id="app">
+    <div class="spinner-wrapper">
+      <div class="lds-dual-ring"></div>
+    </div>
+</body>
+
+</html>

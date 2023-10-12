@@ -1,0 +1,5 @@
+[run]
+source=api
+omit = *migrations*, *tests*, *templates*, *__init__.py*, *forms.py
+plugins =
+    django_coverage_plugin

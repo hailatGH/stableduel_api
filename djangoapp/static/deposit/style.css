@@ -1,0 +1,75 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --fs-xl: 5rem;
+  --fs-600: 3rem;
+  --fs-500: 2.5rem;
+  --fs-400: 2rem;
+
+  --fw-xl: 900;
+  --fw-600: 600;
+  --fw-500: 500;
+  --fw-400: 400;
+
+  --primary: #1ebb57;
+
+  --input-height: 4rem;
+  --input-padding: 1rem;
+}
+
+body {
+  height: 100vh;
+  background: linear-gradient(to bottom right, #001145, #0a122f);
+  color: #e3f0ff;
+  font-family: Roboto, sans-serif;
+}
+
+/* Vue Transition animations */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* Loading Spinner */
+.spinner-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+.lds-dual-ring {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+}
+
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 6px solid #16ae4c;
+  border-color: #16ae4c transparent #16ae4c transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}

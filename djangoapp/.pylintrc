@@ -1,0 +1,16 @@
+[MASTER]
+load-plugins=pylint_django
+
+[FORMAT]
+max-line-length=120
+max-args=8
+
+[MESSAGES CONTROL]
+disable=locally-disabled,missing-docstring,invalid-name,no-self-use,abstract-method,too-few-public-methods,too-many-locals,wildcard-import,unused-wildcard-import,arguments-differ
+test-warnings=true
+
+[DESIGN]
+max-parents=16
+
+[TYPECHECK]
+generated-members=REQUEST,acl_users,aq_parent,"[a-zA-Z]+_set{1,2}",save,delete

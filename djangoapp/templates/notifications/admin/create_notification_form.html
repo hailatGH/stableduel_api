@@ -1,0 +1,18 @@
+{% extends 'admin/base.html' %}
+
+{% block content %}
+    <div>
+        <a href="..">Back</a>
+        <form action="." method="POST" enctype="multipart/form-data">
+        	<br>
+        	<strong>If you do not choose a Game, the message will be sent to ALL users in the system</strong><br/><br/>
+
+            {{ form.as_p }}
+            {% csrf_token %}
+
+                <button type="submit">{{ submit_label }}</button>
+        </form>
+    </div>
+    <br />
+
+{% endblock %}

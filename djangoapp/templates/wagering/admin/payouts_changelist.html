@@ -1,0 +1,11 @@
+{% extends 'admin/change_list.html' %}
+
+{% block object-tools %}
+<strong>
+    <a href="export-csv/">Export CSV</a> | 
+    <a href="import-csv/">Import CSV</a> |
+    <a href="submit-payouts/">Submit Payouts</a>
+</strong>
+    <br />
+    {{ block.super }}
+{% endblock %}

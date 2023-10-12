@@ -1,0 +1,64 @@
+version: "3"
+services:
+  db:
+    image: postgres:9.5.24-alpine
+    volumes:
+      - /var/lib/postgresql/9.5/main:/var/lib/postgresql/data
+    ports:
+      - "6543:5432"
+      - "3000:3000"
+    environment:
+      - POSTGRES_DB=stableduel
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+
+  api:
+    build:
+      context: .
+      args:
+        ENV: "dev"
+    env_file:
+      - .env
+    environment:
+      DJANGO_MEDIA_ROOT: /home/stableduel/media
+    volumes:
+      - .:/home/stableduel/djangoapp
+      - /home/ubuntu/media:/home/stableduel/media
+    command:
+      [
+        "sh",
+        "-c",
+        "echo -e \"\e[33mWating for debugger to connect\e[0m\" && python -m debugpy --wait-for-client --listen 0.0.0.0:5678 manage.py runserver 0.0.0.0:8000 --nothreading --noreload"
+      ]
+    ports:
+      - 8000:8000
+      - 5678:5678
+    depends_on:
+      - db
+      - redis
+    # tty and stdin_open allow for debug mode
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+  celery:
+    build:
+      context: .
+      args:
+        ENV: "dev"
+    env_file:
+      - ./.env
+    volumes:
+      - .:/home/stableduel/djangoapp
+    command: /bin/sh "/celery_start.sh"
+    ports:
+      - 5555:5555
+    depends_on:
+      - api
+      - redis
+    restart: unless-stopped
+
+  redis:
+    restart: always
+    image: redis:alpine
+    ports:
+      - "6379:6379"

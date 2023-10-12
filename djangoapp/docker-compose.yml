@@ -1,0 +1,52 @@
+version: "3"
+services:
+  api:
+    build:
+      context: .
+      args:
+        ENV: "dev"
+    env_file:
+      - .env
+    environment:
+      DJANGO_MEDIA_ROOT: /home/stableduel/media
+    volumes:
+      - .:/home/stableduel/djangoapp
+      - /home/ubuntu/media:/home/stableduel/media
+      - ./media:/home/stableduel/media
+    command: /bin/sh "/start.sh"
+    ports:
+      - 8000:8000
+    depends_on:
+      - redis
+    # tty and stdin_open allow for debug mode
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+    
+  celery:
+    build:
+      context: .
+      args:
+        ENV: "dev"
+    env_file:
+      - ./.env
+    volumes:
+      - .:/home/stableduel/djangoapp
+    command: /bin/sh "/celery_start.sh"
+    ports:
+      - 5555:5555
+    depends_on:
+      - api
+      - redis
+    restart: unless-stopped
+
+  redis:
+    restart: always
+    image: acrsharedprivate.azurecr.io/redis:alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis:/data
+    
+volumes:
+  redis:
